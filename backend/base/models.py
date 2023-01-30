@@ -27,7 +27,7 @@ class Review(models.Model):
     comment = models.TextField(null=True, blank=True)
     createdAt = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
+    def __str__(self) :
         return str(self.name[0:50])
 
 class Order(models.Model):

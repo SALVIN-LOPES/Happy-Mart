@@ -1,0 +1,47 @@
+import {
+  PRODUCT_LIST_REQUEST,
+  PRODUCT_LIST_SUCCESS,
+  PRODUCT_LIST_FAILED,
+
+  PRODUCT_DETAILS_REQUEST,
+  PRODUCT_DETAILS_SUCCESS,
+  PRODUCT_DETAILS_FAILED,
+} from "../constants/productConstants";
+
+// reducer updates the state in the store
+export const productListReducers = (state = { products: [] }, action) => {
+  switch (action.type) {
+    // loading
+    case PRODUCT_LIST_REQUEST:
+      return { loading: true, products: [] };
+
+    // after loading
+    case PRODUCT_LIST_SUCCESS:
+      return { loading: false, products: action.payload };
+
+    case PRODUCT_LIST_FAILED:
+      return { loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+
+// reducer updates the state in the store
+export const productDetailReducers = (state = { product: { reviews : [] } }, action) => {
+  switch (action.type) {
+    // loading
+    case PRODUCT_DETAILS_REQUEST:
+      return { loading: true, ...state };
+
+    // after loading
+    case PRODUCT_DETAILS_SUCCESS:
+      return { loading: false, product: action.payload };
+
+    case PRODUCT_DETAILS_FAILED:
+      return { loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+};

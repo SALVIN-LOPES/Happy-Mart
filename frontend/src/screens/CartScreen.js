@@ -11,7 +11,7 @@ import {
   Card,
 } from "react-bootstrap";
 import Message from "../components/Message";
-import { addToCart,removeFromCart } from "../actions/cartActions";
+import { addToCart, removeFromCart } from "../actions/cartActions";
 
 const CartScreen = () => {
   const { id } = useParams();
@@ -34,14 +34,15 @@ const CartScreen = () => {
   // console.log("cartItems = ",cartItems);
 
   const removeFromCartHandler = (id) => {
-    dispatch(removeFromCart(id))
-    navigate('/cart')
+    dispatch(removeFromCart(id));
+    navigate("/cart");
     console.log("remove = ", id);
   };
 
   const checkOutHandler = () => {
     // ,first go to login page and then check for val;idation if valid go to shipping page
-    navigate("/login?redirect=shipping");
+    // navigate("/login?redirect=shipping");
+    navigate("/shipping");
   };
   //
   return (

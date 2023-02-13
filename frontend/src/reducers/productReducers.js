@@ -2,10 +2,12 @@ import {
   PRODUCT_LIST_REQUEST,
   PRODUCT_LIST_SUCCESS,
   PRODUCT_LIST_FAILED,
-
   PRODUCT_DETAILS_REQUEST,
   PRODUCT_DETAILS_SUCCESS,
   PRODUCT_DETAILS_FAILED,
+  PRODUCT_DELETE_REQUEST,
+  PRODUCT_DELETE_SUCCESS,
+  PRODUCT_DELETE_FAILED,
 } from "../constants/productConstants";
 
 // reducer updates the state in the store
@@ -28,7 +30,10 @@ export const productListReducers = (state = { products: [] }, action) => {
 };
 
 // reducer updates the state in the store
-export const productDetailReducers = (state = { product: { reviews : [] } }, action) => {
+export const productDetailReducers = (
+  state = { product: { reviews: [] } },
+  action
+) => {
   switch (action.type) {
     // loading
     case PRODUCT_DETAILS_REQUEST:
@@ -39,6 +44,25 @@ export const productDetailReducers = (state = { product: { reviews : [] } }, act
       return { loading: false, product: action.payload };
 
     case PRODUCT_DETAILS_FAILED:
+      return { loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+
+// reducer updates the state in the store
+export const productDeleteReducers = (state = {}, action) => {
+  switch (action.type) {
+    // loading
+    case PRODUCT_DELETE_REQUEST:
+      return { loading: true };
+
+    // after loading
+    case PRODUCT_DELETE_SUCCESS:
+      return { loading: false, success: true };
+
+    case PRODUCT_DELETE_FAILED:
       return { loading: false, error: action.payload };
 
     default:

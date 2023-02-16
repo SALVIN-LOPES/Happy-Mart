@@ -9,6 +9,8 @@ import {
   productListReducers,
   productDetailReducers,
   productDeleteReducers,
+  productCreateReducers,
+  productUpdateReducers,
 } from "./reducers/productReducers";
 import { cartReducer } from "./reducers/cartReducers";
 import {
@@ -25,14 +27,19 @@ import {
   orderDeliverReducer,
   orderDetailsReducer,
   orderListMyReducer,
+  orderListReducer,
   orderPayReducer,
 } from "./reducers/orderReducers";
 
 const reducer = combineReducers({
+  productCreate: productCreateReducers,
+  productUpdate: productUpdateReducers,
   productList: productListReducers,
   productDetails: productDetailReducers,
   productDelete: productDeleteReducers,
+
   cart: cartReducer,
+
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   userDetails: userDetailsReducer,
@@ -40,11 +47,13 @@ const reducer = combineReducers({
   userList: userListReducer,
   userUpdate: userUpdateReducer,
   userDelete: userDeleteReducer,
+
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
   orderPay: orderPayReducer,
   orderDeliver: orderDeliverReducer,
   orderList: orderListMyReducer,
+  orderListAdmin: orderListReducer,
 });
 
 //get localstorage items and add to cart if not loggedIn

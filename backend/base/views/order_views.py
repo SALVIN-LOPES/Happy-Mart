@@ -72,12 +72,20 @@ def addOrderItems(request):
 # get all the orders for the particulat user 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def getOrders(request):
+def getMyOrders(request):
     user = request.user
     orders = Order.objects.filter(user=user)
     serializer = OrderSerializer(orders, many=True)
     return Response(serializer.data)
 
+# get all the orders for the particulat user 
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getOrders(request):
+    # user = admin user
+    orders = Order.objects.all()
+    serializer = OrderSerializer(orders, many=True)
+    return Response(serializer.data)
 
 # the order is being saved in the database now write a view to fetch the order with id so to fetch from frontend
 @api_view(['GET'])
@@ -110,15 +118,16 @@ def updateOrderToPaid(request,pk):
     return Response("order was Paid")
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def updateOrderToDelivered(request,pk):
     # pk = order id
+    # user = admin user
     user = request.user
     order = Order.objects.filter(_id = pk).first()
     order.isDelivered = True
     order.deliveredAt = datetime.now()
     order.save()
-    return Response("order was Paid")
+    return Response("order is Delivered")
 
 
 

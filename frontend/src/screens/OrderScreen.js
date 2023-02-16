@@ -17,11 +17,13 @@ import Message from "../components/Message";
 import CheckoutSteps from "../components/CheckoutSteps";
 import {
   createOrder,
+  deliverOrder,
   getOrderDetails,
   payOrder,
 } from "../actions/orderActions";
 import {
   ORDER_CREATE_RESET,
+  ORDER_DELIVER_RESET,
   ORDER_PAY_RESET,
 } from "../constants/orderConstants";
 import Loader from "../components/Loader";
@@ -34,6 +36,9 @@ const OrderScreen = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, error, loading } = orderDetails;
@@ -69,8 +74,10 @@ const OrderScreen = () => {
   useEffect(() => {
     // if no order or orderId not same!!
     // if paid : dont show paypal script
-    if (!order || successPay || order._id != Number(id)) {
+    if (!order || successPay || order._id != Number(id) || successDeliver) {
       dispatch({ type: ORDER_PAY_RESET });
+      dispatch({ type: ORDER_DELIVER_RESET });
+
       dispatch(getOrderDetails(id));
     } else if (!order.isPaid) {
       if (!window.paypal) {
@@ -79,11 +86,16 @@ const OrderScreen = () => {
         setSdkReady(true);
       }
     }
-  }, [dispatch, order, id, successPay]);
+  }, [dispatch, order, id, successPay, successDeliver]);
 
   const successPaymentHandler = (paymentResult) => {
     // it will mark isPaid = true for order Id in DB
     dispatch(payOrder(id, paymentResult));
+  };
+
+  const deliverHandler = () => {
+    // it will mark isPaid = true for order Id in DB
+    dispatch(deliverOrder(order));
   };
 
   return loading ? (
@@ -115,7 +127,7 @@ const OrderScreen = () => {
               </p>
               {order.isDelivered ? (
                 <Message variant="success">
-                  Delivered On {order.deliveredAt}
+                  Delivered On {order.deliveredAt.substring(0, 10)}
                 </Message>
               ) : (
                 <Message variant="warning">Not Delivered</Message>
@@ -130,7 +142,9 @@ const OrderScreen = () => {
                 {order.paymentMethod}
               </p>
               {order.isPaid ? (
-                <Message variant="success">Paid On {order.paidAt}</Message>
+                <Message variant="success">
+                  Paid On {order.paidAt.substring(0, 10)}
+                </Message>
               ) : (
                 <Message variant="warning">Not Paid</Message>
               )}
@@ -216,6 +230,19 @@ const OrderScreen = () => {
                 </ListGroup.Item>
               )}
             </ListGroup>
+            {userInfo &&
+              userInfo.isAdmin &&
+              order.isPaid &&
+              !order.isDelivered && (
+                <ListGroup.Item>
+                  <Button
+                    type="button"
+                    className="btn btn-block"
+                    onClick={deliverHandler}>
+                    Mark As Deliver
+                  </Button>
+                </ListGroup.Item>
+              )}
           </Card>
         </Col>
       </Row>

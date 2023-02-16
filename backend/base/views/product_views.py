@@ -26,15 +26,14 @@ def getProduct(request,pk):
 @permission_classes([IsAdminUser])
 def createProduct(request):
     user = request.user
-    data = request.data 
     product = Product.objects.create(
-        user = user,
-        name = data['name'],
-        price = data['price'],
-        brand = data['brand'],
-        countInStock = data['countInStock'],
-        category = data['category'],
-        description = data['description'],
+        user=user,
+        name='Sample Name',
+        price=0,
+        brand='Sample Brand',
+        countInStock=0,
+        category='Sample Category',
+        description=''
     )
     if product is not None:
         serializer = ProductSerializer(product, many=False)
@@ -60,13 +59,26 @@ def updateProduct(request,pk):
     data = request.data
     product.name = data['name']
     product.price = data['price']
-    product.category = data['category']
     product.brand = data['brand']
+    product.countInStock = data['countInStock']
+    product.category = data['category']
+    product.description = data['description']
 
     if product is not None:
-        product.delete()
-        return Response({"detail" : 'product deleted successfully!'})
+        product.save()
+        return Response({"detail" : 'product updated successfully!'})
     return Response({"detail" : "There is no such product saved in database!"})
+
+@api_view(['POST'])
+def uploadImage(request):
+    data = request.data
+
+    product_id = data['product_id']
+    product = Product.objects.filter(_id=product_id).first()
+
+    product.image = request.FILES.get('image')
+    product.save()
+    return Response('Image uploaded successfully!')
 
 
 

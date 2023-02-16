@@ -5,7 +5,12 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { useDispatch, useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
-import { deleteProduct, listProducts } from "../actions/productActions";
+import {
+  createProduct,
+  deleteProduct,
+  listProducts,
+} from "../actions/productActions";
+import { PRODUCT_CREATE_RESET } from "../constants/productConstants";
 
 const ProductListScreen = () => {
   const dispatch = useDispatch();
@@ -22,6 +27,14 @@ const ProductListScreen = () => {
     error: productListError,
   } = productList;
 
+  const productCreate = useSelector((state) => state.productCreate);
+  const {
+    loading: productCreateLoading,
+    error: productCreateError,
+    success: productCreateSuccess,
+    product: productCreated,
+  } = productCreate;
+
   const productDelete = useSelector((state) => state.productDelete);
   const {
     loading: productDeleteLoading,
@@ -32,12 +45,26 @@ const ProductListScreen = () => {
   // if productDeleteSuccess = true | fetch(listProducts again)
 
   useEffect(() => {
-    if ((userInfo && userInfo.isAdmin) || productDeleteSuccess) {
-      dispatch(listProducts());
-    } else {
+    dispatch({ type: PRODUCT_CREATE_RESET });
+
+    if (!userInfo.isAdmin) {
       navigate(`/login`);
     }
-  }, [dispatch, navigate, userInfo, productDeleteSuccess]);
+
+    if (productCreateSuccess) {
+      // redirect to product edit page
+      navigate(`/admin/product/${productCreated._id}/edit`);
+    } else {
+      dispatch(listProducts());
+    }
+  }, [
+    dispatch,
+    navigate,
+    userInfo,
+    productDeleteSuccess,
+    productCreateSuccess,
+    productCreated,
+  ]);
 
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure you want to delete this Product?")) {
@@ -45,8 +72,9 @@ const ProductListScreen = () => {
     }
   };
 
-  const createProductHandler = (product) => {
+  const createProductHandler = () => {
     console.log("product created successfully!!");
+    dispatch(createProduct());
   };
 
   return (
@@ -61,8 +89,15 @@ const ProductListScreen = () => {
           </Button>
         </Col>
       </Row>
-      {productDeleteLoading && <Loader/>}
-      {productDeleteError && <Message variant="danger">{productDeleteError}</Message>}
+      {productDeleteLoading && <Loader />}
+      {productDeleteError && (
+        <Message variant="danger">{productDeleteError}</Message>
+      )}
+
+      {productCreateLoading && <Loader />}
+      {productCreateError && (
+        <Message variant="danger">{productCreateError}</Message>
+      )}
 
       {productListLoading ? (
         <Loader />
@@ -90,7 +125,7 @@ const ProductListScreen = () => {
                 <td>{product.brand}</td>
 
                 <td>
-                  <LinkContainer to={`/admin/user/${product._id}/edit`}>
+                  <LinkContainer to={`/admin/product/${product._id}/edit`}>
                     <Button variant="light" className="btn-sm">
                       <i className="fas fa-edit"></i>
                     </Button>

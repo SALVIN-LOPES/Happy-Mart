@@ -1,10 +1,10 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from base.serializers import ProductSerializer
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
-from base.models import Product
-
+from base.models import Product, Review
+from rest_framework import status
 
 @api_view(['GET'])
 def getProducts(request):
@@ -80,6 +80,53 @@ def uploadImage(request):
     product.save()
     return Response('Image uploaded successfully!')
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def createProductReview(request,pk):
+    # pk= product id
+    user = request.user
+    product = Product.objects.filter(_id = pk).first()
+    data = request.data
+    # if review of that user on that product exist notify hin
+    alreadyExist = product.review_set.filter(user=user).exists()
+
+    if alreadyExist:
+        content = {'detail' : 'Review already exists'}
+        print('Review already exists')
+        return Response(content,status=status.HTTP_400_BAD_REQUEST)
+
+    # no rating or 0
+    elif data['rating'] == 0:
+        content = {'detail' : 'Please select a Rating'}
+        return Response(content,status=status.HTTP_400_BAD_REQUEST)
+
+    # create review
+    else : 
+        review = Review.objects.create(
+            user=user,
+            product=product,
+            name = user.first_name,
+            rating=data['rating'],
+            comment=data['comment']
+        )
+
+        # get the len of the reviews on the product
+        reviews = product.review_set.all()
+        # update the product numReviews 
+        product.numReviews =  len(reviews)
+
+        # get the total rating for particulat product
+        totalRating = 0
+        for review in reviews:
+            totalRating += review.rating
+        
+        product.rating = totalRating / len(reviews)
+        product.save()
+
+        if review is not None:
+            review.save()
+            return Response({'detail' : 'Review created successfully!'})
+        return Response({'detail' :'Review was not  created!!'})
 
 
 

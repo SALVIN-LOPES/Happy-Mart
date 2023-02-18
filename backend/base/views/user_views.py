@@ -47,7 +47,7 @@ def registerUser(request):
 
         return Response(serializer.data)
     except:
-        message = {'details' : 'User with this email alredy exist' }
+        message = {'detail' : 'User with this email alredy exist' }
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])

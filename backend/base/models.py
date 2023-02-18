@@ -28,7 +28,7 @@ class Review(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) :
-        return str(self.name[0:50])
+        return str(self.rating)
 
 class Order(models.Model):
     _id = models.AutoField(primary_key=True, editable=False)

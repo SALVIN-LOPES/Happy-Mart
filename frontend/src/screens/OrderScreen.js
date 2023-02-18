@@ -72,6 +72,11 @@ const OrderScreen = () => {
   };
 
   useEffect(() => {
+    // if no userInfo is provided navigate to login page
+    if (!userInfo) {
+      navigate("/login");
+    }
+
     // if no order or orderId not same!!
     // if paid : dont show paypal script
     if (!order || successPay || order._id != Number(id) || successDeliver) {
@@ -230,6 +235,7 @@ const OrderScreen = () => {
                 </ListGroup.Item>
               )}
             </ListGroup>
+            {loadingDeliver && <Loader />}
             {userInfo &&
               userInfo.isAdmin &&
               order.isPaid &&

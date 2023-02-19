@@ -3,15 +3,51 @@ from rest_framework.response import Response
 from base.serializers import ProductSerializer
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 
+
+
+#search functionality
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
+from django.core.paginator import Paginator
+
 from base.models import Product, Review
 from rest_framework import status
 
 @api_view(['GET'])
 def getProducts(request):
-    products = Product.objects.all()
-    serializer = ProductSerializer(products, many=True)
+    # get the query fron homaPage
+    query = request.query_params.get('keyword')
+    if query == None:
+        query = ""
+    print('keyword = ',query)
+    products = Product.objects.filter(name__icontains=query)
 
-    return Response(serializer.data)
+    page = request.query_params.get('page')
+    
+    paginator = Paginator(products,5)
+
+    try:
+        # if we pass the page
+        products = paginator.page(page)
+        # if we didnt pass the page
+    except PageNotAnInteger:
+        products = paginator.page(1)
+        # if the page limit is exceeded
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+    
+    if page == None: 
+        page = 1
+    
+    page = int(page)
+    print("page: " + str(page))
+
+    serializer = ProductSerializer(products, many=True)
+    return Response(
+        {
+            "products" : serializer.data,
+            "page":page,
+            "pages":paginator.num_pages}
+        )
 
 @api_view(['GET'])
 def getProduct(request,pk):

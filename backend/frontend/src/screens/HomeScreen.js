@@ -34,7 +34,7 @@ function HomeScreen() {
 
   return (
     <div>
-      <h1>Latest Products (updated)</h1>
+      <h1>Latest Products</h1>
       {products.length === 0 && (
         <Message variant="info">
           There are no products with this query set

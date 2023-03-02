@@ -27,7 +27,7 @@ const LoginScreen = () => {
   }, [navigate, userInfo, redirect]);
 
   const submitHandler = (e) => {
-    e.preventDefault();
+    //e.preventDefault();
     dispatch(login(email, password));
   };
   //  20022001@Sc

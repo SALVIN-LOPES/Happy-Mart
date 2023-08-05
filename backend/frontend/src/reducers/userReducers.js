@@ -29,7 +29,7 @@ import {
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
-  switch (action.payload) {
+  switch (action.type) {
     case USER_LOGIN_REQUEST:
       return { loading: true };
 
@@ -123,7 +123,7 @@ export const userListReducer = (state = { users: [] }, action) => {
   }
 };
 
-export const userUpdateReducer = (state = {  }, action) => {
+export const userUpdateReducer = (state = {}, action) => {
   switch (action.type) {
     case USER_UPDATE_REQUEST:
       return { loading: true };

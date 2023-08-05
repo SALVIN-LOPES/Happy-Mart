@@ -12,7 +12,6 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-
 # db secure connection method : 
 with open(os.path.join(BASE_DIR, 'secrets.json')) as secrets_file:
     secrets = json.load(secrets_file)
@@ -135,6 +134,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 
 # new database : postgres database
+# Ecommerce database
 DATABASES={
    'default':{
       'ENGINE':get_secret('DB_ENGINE'),

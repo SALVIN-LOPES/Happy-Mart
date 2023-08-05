@@ -54,7 +54,6 @@ def registerUser(request):
 @permission_classes([IsAuthenticated])
 def updateUserProfile(request):
     user = request.user
-    serializer = UserSerializerWithToken(user,many=False)
 
     data = request.data
 
@@ -66,6 +65,8 @@ def updateUserProfile(request):
         user.password = make_password(data['password'])
 
     user.save()
+
+    serializer = UserSerializerWithToken(user,many=False)
 
     return Response(serializer.data)
 
@@ -120,9 +121,6 @@ def updateUser(request,pk):
     
     return Response(serializer.data)
 # now
-
-
-
 
 @api_view(['DELETE'])
 @permission_classes([IsAdminUser])

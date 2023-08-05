@@ -93,6 +93,7 @@ const ProductEditScreen = () => {
         formData,
         config
       );
+      console.log("image data = ", data);
       setImage(data);
       setUploading(false);
     } catch (error) {

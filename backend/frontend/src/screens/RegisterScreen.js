@@ -31,10 +31,6 @@ const RegisterScreen = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log("name = ", name);
-    console.log("email = ", email);
-    console.log("password = ", password);
-    console.log("confirmPassword = ", confirmPassword);
 
     if (password != confirmPassword) {
       setMessage("Passwords do not match");

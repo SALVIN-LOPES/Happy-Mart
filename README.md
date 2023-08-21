@@ -1,5 +1,6 @@
 
 # Happy-Mart : An E-commerce Marketplace
+![homeScreen](https://github.com/SALVIN-LOPES/Happy-Mart/assets/92968074/bd2cdd7e-35b9-4ee8-9f15-f5d189f08690)
 
 
 

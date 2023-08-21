@@ -53,7 +53,7 @@ cd backend/frontend
 npm start
 ```
 
-Server will be live at port : 3000
+Open your web browser and Enter the Url
 ```
 http://localhost:3000/
 ```
